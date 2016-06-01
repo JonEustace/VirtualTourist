@@ -12,12 +12,12 @@ class CustomImageFlowLayout : UICollectionViewFlowLayout{
     
     override init(){
         super.init()
-        setupLayout()
+       // setupLayout()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init()
-        setupLayout()
+        //setupLayout()
     }
     
     func setupLayout(){

@@ -9,11 +9,8 @@
 import UIKit
 import MapKit
 
-class PinViewController :  CoreDataCollectionViewController  {
+class PinViewController : CoreDataCollectionViewController  {
 
-
-    
-    
     
     @IBOutlet weak var mapView: MKMapView!
     var pin:Pin!
@@ -32,7 +29,6 @@ class PinViewController :  CoreDataCollectionViewController  {
  
      override func viewDidLoad() {
         
-        mapView.hidden = false
         // show the pin on the map
         let annotation = MKPointAnnotation()
         let coordinate = CLLocationCoordinate2D(latitude: Double(pin.latitude!), longitude: Double(pin.longitude!))
@@ -48,8 +44,9 @@ class PinViewController :  CoreDataCollectionViewController  {
         //disable scrolling
         mapView.scrollEnabled = false
       
-        collectionView!.backgroundColor = UIColor.whiteColor()
-        collectionView!.collectionViewLayout = CustomImageFlowLayout()
+       // collectionView!.backgroundColor = UIColor.blueColor()
+       //collectionView!.collectionViewLayout = CustomImageFlowLayout()
+       
         resolvePhotos()
         
         
