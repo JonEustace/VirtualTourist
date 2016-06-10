@@ -24,10 +24,6 @@ class Pin: NSManagedObject {
             fatalError("Unable to find the " + "Pin" + " entity.")
         }
     }
-    /*
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
-    }*/
     
     func addPhoto(value: Photo){
         let items = self.mutableSetValueForKey("photo")
@@ -35,29 +31,8 @@ class Pin: NSManagedObject {
     }
     
     func removePhoto(value: Photo){
-       /* let items = self.mutableSetValueForKey("Photo")
-        items.removeObject(value)*/
-        
-        
+        let items = self.mutableSetValueForKey("Photo")
+        items.removeObject(value)
     }
-    
-    func removePhoto4(index: Int) -> NSSet{
-        var items = photo?.allObjects as! [Photo]
-        items.removeAtIndex(index)
-        return NSSet(array: items)
-    }
-    
-    func removePhoto2(value: Photo){
-       // var mutableSet = NSMutableSet.setSet(self.photo)
-    }
-    
-    func removePhoto3(){
-        self.setValue(nil, forKey: "photo")
-    }
-    
-    
-    
-    
-    
     
 }

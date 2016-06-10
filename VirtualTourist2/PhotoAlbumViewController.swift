@@ -118,17 +118,14 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath){
         print("selected \(indexPath.row)")
         
-        let photoz = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
+        let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
         
         
-        //let newSet = pin.removePhoto4(indexPath.row)
+        pin.removePhoto(photo)
         
-       //
-        
-       
-    //  pin.photo = NSSet()
-        
-        CoreDataStackManager.sharedInstance().saveContext()
+     
+      
+        saveContext()
         
           fetch()
         self.collectionView.reloadData()
