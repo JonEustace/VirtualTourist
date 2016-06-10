@@ -12,12 +12,12 @@ class CustomImageFlowLayout : UICollectionViewFlowLayout{
     
     override init(){
         super.init()
-       // setupLayout()
+        setupLayout()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init()
-        //setupLayout()
+        setupLayout()
     }
     
     func setupLayout(){
@@ -34,8 +34,6 @@ class CustomImageFlowLayout : UICollectionViewFlowLayout{
         
         get{
             let numberOfColumns: CGFloat = 3
-            
-            // 200 - 2 / 3
             
             let itemWidth = (CGRectGetWidth(self.collectionView!.frame) - (self.minimumInteritemSpacing * numberOfColumns - 1)) / numberOfColumns
             return CGSizeMake(itemWidth, itemWidth)

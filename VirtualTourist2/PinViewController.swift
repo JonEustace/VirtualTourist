@@ -8,9 +8,11 @@
 
 import UIKit
 import MapKit
+import CoreData
 
-class PinViewController : CoreDataCollectionViewController  {
-
+class PinViewController : UIViewController  {
+/*
+    @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet weak var mapView: MKMapView!
     var pin:Pin!
@@ -27,6 +29,18 @@ class PinViewController : CoreDataCollectionViewController  {
     let arrz = [UIImage(named: "1"), UIImage(named: "2"), UIImage(named: "1"), UIImage(named: "1"), UIImage(named: "2"), UIImage(named: "1"), UIImage(named: "2"), UIImage(named: "1"), UIImage(named: "1"), UIImage(named: "2"), UIImage(named: "1"), UIImage(named: "2"), UIImage(named: "1"), UIImage(named: "1"), UIImage(named: "2"), UIImage(named: "1"), UIImage(named: "2"), UIImage(named: "1"), UIImage(named: "1"), UIImage(named: "2"), UIImage(named: "2")]
     
  
+    lazy var fetchedResultsController : NSFetchedResultsController = {
+        let fetchRequest = NSFetchRequest(entityName: "Photo")
+        
+        fetchRequest.predicate = NSPredicate(format: "pin == %@", self.pin)
+        
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "photo_path", ascending: true)]
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.sharedContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+        return fetchedResultsController
+    }()
+    
      override func viewDidLoad() {
         
         // show the pin on the map
@@ -44,9 +58,19 @@ class PinViewController : CoreDataCollectionViewController  {
         //disable scrolling
         mapView.scrollEnabled = false
       
-       // collectionView!.backgroundColor = UIColor.blueColor()
-       //collectionView!.collectionViewLayout = CustomImageFlowLayout()
+        collectionView!.backgroundColor = UIColor.whiteColor()
+        collectionView!.collectionViewLayout = CustomImageFlowLayout()
        
+        do{
+            try fetchedResultsController.performFetch()
+          
+            photoArr = fetchedResultsController.fetchedObjects as! [Photo]
+            collectionView.reloadData()
+            
+        } catch {
+            print("error")
+        }
+        
         resolvePhotos()
         
         
@@ -57,33 +81,43 @@ class PinViewController : CoreDataCollectionViewController  {
             
             if pin.photo?.count == 0 {
                 
+                
                 photoArr = pin.photo?.allObjects as? [Photo]
                 //var i = photoArr![0].photo_path
                 
-                print(photoArr!.count)
+              
                 
                 let parameters : [String : AnyObject] = ["method": Flickr.Consts.GEO_METHOD, "format" : Flickr.Consts.FORMAT, "api_key": Flickr.Consts.API_KEY, "lat" : latitude, "lon" : longitude, "nojsoncallback" : "1", "per_page" : "21", "extras" : "url_m"]
                 
                 flickr.performGetRequest(parameters) { (data, error) in
                     
-                  print(data.count)
+             
                     
                     for record in data as! [AnyObject]{
                         
-                         print((record["url_m"] as? String)!)
+                        
+                        
                       
                         let p =  Photo(photo_path: (record["url_m"] as? String)!, photo_url: (record["url_m"] as? String)!, photo_bin: NSData(), context: self.sharedContext)
                         
                         /*let p = Photo(photo_path: (record["url_m"] as? String)!, photo_url: (record["url_m"] as? String)! context: self.sharedContext)*/
-                        self.pin.addPhotoURL(p)
+                        self.pin.addPhoto(p)
                         }
                     
                  
                       self.saveContext()
+                    
+                    print("calling download photos")
+                    print(self.pin.photo?.count)
+                    self.flickr.downloadPhotos(self.pin, completionHandler: {
+                        
+                    })
                 }
                 
             } else {
-                print("photos")
+                
+              
+            
             }
 
         
@@ -92,7 +126,7 @@ class PinViewController : CoreDataCollectionViewController  {
     }
     
     
-    /*
+    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if let photos = pin.photo {
@@ -105,48 +139,24 @@ class PinViewController : CoreDataCollectionViewController  {
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
+ 
+  
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCell", forIndexPath: indexPath) as! PhotoAlbumCollectionViewCell
-        cell.imageView.image = arrz[indexPath.row]
-        cell.backgroundColor = UIColor.blueColor()
-        cell.activityIndicator.startAnimating()
         
-        print("fdf")
-        
-        if let photoArr = photoArr{
-             print(photoArr[indexPath.row])
-        }
-        print("fdf")
-       
-        
-        
-        return cell
-    }*/
-    
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        
-       
-        
-        let pic = fetchedResultsController!.objectAtIndexPath(indexPath) as! Photo
+        let pic = photoArr![indexPath.row]
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCell", forIndexPath: indexPath) as! PhotoAlbumCollectionViewCell
         
-        if let pic = pic.photo_bin{
-            
-            let image = UIImage(data:pic)
-            
-            cell.imageView.image = image
-        } else {
-            print("download image")
-        }
+        cell.imageView.image = UIImage(data:pic.photo_bin!)
+        
         return cell
         
         
     }
-    
+  
     func saveContext() {
         CoreDataStackManager.sharedInstance().saveContext()
     }
@@ -154,6 +164,6 @@ class PinViewController : CoreDataCollectionViewController  {
     lazy var sharedContext = {
         CoreDataStackManager.sharedInstance().managedObjectContext
     }()
-
+*/
     
 }

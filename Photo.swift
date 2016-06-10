@@ -15,16 +15,19 @@ class Photo: NSManagedObject {
     
     let entityName = "Photo"
     
-    convenience init(photo_path: String, photo_url : String, photo_bin: NSData, context: NSManagedObjectContext){
+    convenience init(url : String, binary: NSData, context: NSManagedObjectContext){
         if let ent = NSEntityDescription.entityForName("Photo", inManagedObjectContext: context){
             self.init(entity: ent, insertIntoManagedObjectContext: context)
-            self.photo_path = photo_path
-            self.photo_url = photo_url
-            self.photo_bin = photo_bin
+            self.url = url
+            self.binary = binary
         } else {
             fatalError("Unable to find the " + "Photo" + " entity.")
         }
     }
+    /*
+    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    }*/
     
     
 }

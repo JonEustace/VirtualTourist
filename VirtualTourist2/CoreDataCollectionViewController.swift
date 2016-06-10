@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class CoreDataCollectionViewController : UICollectionViewController {
-
+/*
     var blockOperations: [NSBlockOperation] = []
     
     var fetchedResultsController : NSFetchedResultsController?{
@@ -167,6 +167,7 @@ extension CoreDataCollectionViewController: NSFetchedResultsControllerDelegate{
         
         collectionView?.reloadData()
     }
+ */
 }
 
  

@@ -17,7 +17,7 @@ import CoreData
  *
  */
 
-private let SQLITE_FILE_NAME = "PinAndPhotosz.sqlite"
+private let SQLITE_FILE_NAME = "PinAndPhoto.sqlite"
 
 class CoreDataStackManager {
     

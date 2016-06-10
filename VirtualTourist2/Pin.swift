@@ -13,6 +13,7 @@ import CoreData
 class Pin: NSManagedObject {
 
     let entityName = "Pin"
+   
 
     convenience init(latitude: Double, longitude: Double, context: NSManagedObjectContext){
         if let ent = NSEntityDescription.entityForName("Pin", inManagedObjectContext: context){
@@ -23,16 +24,40 @@ class Pin: NSManagedObject {
             fatalError("Unable to find the " + "Pin" + " entity.")
         }
     }
+    /*
+    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertIntoManagedObjectContext: context)
+    }*/
     
-    func addPhotoURL(value: Photo){
+    func addPhoto(value: Photo){
         let items = self.mutableSetValueForKey("photo")
         items.addObject(value)
     }
     
-    func removePhotoURL(value: Photo){
-        let items = self.mutableSetValueForKey("photo")
-        items.removeObject(value)
+    func removePhoto(value: Photo){
+       /* let items = self.mutableSetValueForKey("Photo")
+        items.removeObject(value)*/
+        
+        
     }
+    
+    func removePhoto4(index: Int) -> NSSet{
+        var items = photo?.allObjects as! [Photo]
+        items.removeAtIndex(index)
+        return NSSet(array: items)
+    }
+    
+    func removePhoto2(value: Photo){
+       // var mutableSet = NSMutableSet.setSet(self.photo)
+    }
+    
+    func removePhoto3(){
+        self.setValue(nil, forKey: "photo")
+    }
+    
+    
+    
+    
     
     
 }

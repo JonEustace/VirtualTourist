@@ -11,12 +11,13 @@ import MapKit
 import CoreData
 
 class ViewController: UIViewController, UIGestureRecognizerDelegate, MKMapViewDelegate {
-
+    
     //keep track of current position and zoom of map
     let mapPosition = MapPositionAndZoom()
     
     var pin : Pin?
     var pinArr : [Pin]?
+    let flickr = Flickr()
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -46,7 +47,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, MKMapViewDe
         
         
         //load all the saved pins onto the map
-         pinArr = fetchAllPins()
+        pinArr = fetchAllPins()
         
         
         for pin in pinArr!{
@@ -60,13 +61,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, MKMapViewDe
         }
         
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    // This function fires when the map's display region changes. 
+    // This function fires when the map's display region changes.
     // it saves the state of the map
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         let currentRegion = mapView.region
@@ -79,8 +80,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, MKMapViewDe
     }
     
     
-   // This function handles the gestures of a long press on the map
-   // When a long press occurs it creates a pin and adds an annotation to the map
+    // This function handles the gestures of a long press on the map
+    // When a long press occurs it creates a pin and adds an annotation to the map
     func didLongPressMap(gestureRecognizer : UIGestureRecognizer){
         if(gestureRecognizer.state == UIGestureRecognizerState.Began){
             let touchedLocation = gestureRecognizer.locationInView(mapView);
@@ -93,9 +94,18 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, MKMapViewDe
             mapView.addAnnotation(annotation)
             
             pin = Pin(latitude: coordinate.latitude, longitude: coordinate.longitude, context: self.sharedContext)
-    
-            saveContext()
             
+            if let pin = pin {
+                
+                flickr.downloadRandomUrls(21, pin: pin, completionHandler: { (success, error) in
+                    if success {
+                      print("success!")
+                    } else {
+                        print("error \(error)")
+                    }
+                })
+            }
+          
         }
     }
     
@@ -119,14 +129,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, MKMapViewDe
         
         //deselect the annotation so when you revisit this view you can select the same annotation again.
         mapView.deselectAnnotation(view.annotation, animated: false)
-      
+        
         performSegueWithIdentifier("ViewPinSegue", sender: self)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "ViewPinSegue"{
-            let vc = segue.destinationViewController as! PinViewController
-       
+            let vc = segue.destinationViewController as! PhotoAlbumViewController
             vc.pin = pin
             
         }
