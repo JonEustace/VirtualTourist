@@ -121,13 +121,13 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
         
         
-        pin.removePhoto(photo)
+        //pin.removePhoto(photo)
         
-     
+        sharedContext.deleteObject(photo)
       
         saveContext()
         
-          fetch()
+        fetch()
         self.collectionView.reloadData()
     }
     
