@@ -61,10 +61,6 @@ extension Flickr{
     }
     
     
-    func deletePhotoFromPin(pin: Pin, photo: Photo){
-        pin.removePhoto(photo)
-    }
-    
     // This function downloads photos given an array of urls in which to fetch from. It then saves the images to a pin and
     // send a NSnotification that a download has completed.
     func downloadPhotos(pin: Pin, completionHandler: (success : Bool, error : NSError?) -> Void){

@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreData
 
-class ViewController: UIViewController, UIGestureRecognizerDelegate, MKMapViewDelegate {
+class ViewController: UIViewController, UIGestureRecognizerDelegate, MKMapViewDelegate, CLLocationManagerDelegate {
     
     //keep track of current position and zoom of map
     let mapPosition = MapPositionAndZoom()
@@ -18,6 +18,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, MKMapViewDe
     var pin : Pin?
     var pinArr : [Pin]?
     let flickr = Flickr()
+    
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -62,6 +63,22 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, MKMapViewDe
         
     }
     
+    func isReachable() -> Bool{
+        if Reachability.isConnectedToNetwork() == true{
+            print("connected")
+            return true
+        } else {
+            print("not connected")
+            var alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
+            alert.show()
+            return false
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        isReachable()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -83,29 +100,32 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate, MKMapViewDe
     // This function handles the gestures of a long press on the map
     // When a long press occurs it creates a pin and adds an annotation to the map
     func didLongPressMap(gestureRecognizer : UIGestureRecognizer){
-        if(gestureRecognizer.state == UIGestureRecognizerState.Began){
-            let touchedLocation = gestureRecognizer.locationInView(mapView);
-            let coordinate = mapView.convertPoint(touchedLocation, toCoordinateFromView: mapView)
+        if isReachable(){
             
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
-            
-            
-            mapView.addAnnotation(annotation)
-            
-            pin = Pin(latitude: coordinate.latitude, longitude: coordinate.longitude, context: self.sharedContext)
-            
-            if let pin = pin {
+            if(gestureRecognizer.state == UIGestureRecognizerState.Began){
+                let touchedLocation = gestureRecognizer.locationInView(mapView);
+                let coordinate = mapView.convertPoint(touchedLocation, toCoordinateFromView: mapView)
                 
-                flickr.downloadRandomUrls(21, pin: pin, completionHandler: { (success, error) in
-                    if success {
-                      print("success!")
-                    } else {
-                        print("error \(error)")
-                    }
-                })
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = coordinate
+                
+                
+                mapView.addAnnotation(annotation)
+                
+                pin = Pin(latitude: coordinate.latitude, longitude: coordinate.longitude, context: self.sharedContext)
+                
+                if let pin = pin {
+                    
+                    flickr.downloadRandomUrls(21, pin: pin, completionHandler: { (success, error) in
+                        if success {
+                            print("success!")
+                        } else {
+                            print("error \(error)")
+                        }
+                    })
+                }
+                
             }
-          
         }
     }
     

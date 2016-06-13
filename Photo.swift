@@ -24,10 +24,7 @@ class Photo: NSManagedObject {
             fatalError("Unable to find the " + "Photo" + " entity.")
         }
     }
-    /*
-    override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
-        super.init(entity: entity, insertIntoManagedObjectContext: context)
-    }*/
+   
     
     
 }

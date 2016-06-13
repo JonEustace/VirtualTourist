@@ -115,8 +115,6 @@ class Flickr{
     
     func parseJSON(data: NSData!) -> (parsedJson: [[String : AnyObject]]?, error: NSError?) {
         
-        
-        
         let parsedData : [String:AnyObject]!
         
         do{

@@ -22,6 +22,21 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
     
     @IBOutlet weak var newCollectionButton: UIButton!
     @IBOutlet weak var noImagesFoundLabel: UILabel!
+    
+    
+    func isReachable() -> Bool{
+        if Reachability.isConnectedToNetwork() == true{
+            print("connected")
+            return true
+        } else {
+            print("not connected")
+            var alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
+            alert.show()
+            return false
+        }
+    }
+    
+    
     override func viewDidLoad() {
         // MARK: Map on load
         
@@ -40,8 +55,6 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
         
         //disable scrolling
         mapView.scrollEnabled = false
-        
-       
         
         //MARK: Collection view on load
         // set the souce and delegate of the collection view
@@ -70,38 +83,20 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
     
     
     @IBAction func newCollectionButtonClicked(sender: AnyObject) {
-      
-        
+        if isReachable(){
         for photo in pin.photo!{
-         
             sharedContext.deleteObject(photo as! NSManagedObject)
         }
         
         pin.photo = NSSet()
-        
         saveContext()
-        
         fetch()
-        
-        
-        flickr.downloadRandomUrls(21, pin: self.pin) { (success, error) in
-            
-
-        
+        flickr.downloadRandomUrls(21, pin: self.pin) { (success, error) in }
         }
-        
-      
-        
-        
-        
-        
-       
         
     }
     
     //MARK: Collection view required methods
-
-    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         //print("num items: \(self.fetchedResultsController.sections![section].numberOfObjects)")
@@ -116,24 +111,14 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath){
-        print("selected \(indexPath.row)")
-        
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-        
-        
-        //pin.removePhoto(photo)
-        
         sharedContext.deleteObject(photo)
-      
         saveContext()
-        
         fetch()
         self.collectionView.reloadData()
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
-    
-        
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ImageCell", forIndexPath: indexPath) as! PhotoAlbumCollectionViewCell
         
         let photo = fetchedResultsController.objectAtIndexPath(indexPath) as? Photo
@@ -143,7 +128,6 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
         }
         
         return cell
-        
     }
     
     
@@ -152,7 +136,6 @@ class PhotoAlbumViewController : UIViewController, NSFetchedResultsControllerDel
         fetch()
         self.collectionView.reloadData()
     }
-    
     
     // lazily instanciated FRC sorted by the photo_path.
     lazy var fetchedResultsController : NSFetchedResultsController = {

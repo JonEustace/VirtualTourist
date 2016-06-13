@@ -25,14 +25,6 @@ class Pin: NSManagedObject {
         }
     }
     
-    func addPhoto(value: Photo){
-        let items = self.mutableSetValueForKey("photo")
-        items.addObject(value)
-    }
-    
-    func removePhoto(value: Photo){
-        let items = self.mutableSetValueForKey("Photo")
-        items.removeObject(value)
-    }
+   
     
 }
